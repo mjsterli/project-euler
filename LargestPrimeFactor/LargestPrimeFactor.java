@@ -1,7 +1,10 @@
+import java.util.concurrent.TimeUnit;
+
 public class LargestPrimeFactor
 {
   public static void main( String[] args )
   {
+    long startTime = System.nanoTime();
     long num = 600851475143L, nextFactor;
     boolean isPrime = false;
 
@@ -12,7 +15,9 @@ public class LargestPrimeFactor
       num        = ( !isPrime ? nextFactor : num );
     }while( !isPrime );
 
+    long totalTime = System.nanoTime() - startTime;
     System.out.println( "The Larges Prime Factor is: " + Long.toString( num ) );
+    System.out.println( "Total Time: " + Long.toString( totalTime ) + " nanoseconds." );
   }
 
   static long NextFactor( long factor )
