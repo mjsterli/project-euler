@@ -17,18 +17,23 @@ public class LargestProductInSeries
     catch( Exception e )
     {}
 
+    long startTime = System.nanoTime();
     for( int i = 0; i < number.length() - size; i++ )
     {
       int product = ProductOfDigits( number.substring( i, i+size ).toCharArray() );
-      if( product > bestProduct )
+      if( product == 0 )
+        i += SearchForZero( number.substring( i, i+size ).toCharArray() ) + 1;
+      else if( product > bestProduct )
       {
         bestProduct = product;
         index = i;
       }
     }
+    long totalTime = System.nanoTime() - startTime;
 
     System.out.println( "The best product is: " + bestProduct );
     System.out.println( "The digits are: " + number.substring( index, index+size ) );
+    System.out.println( "The total time: " + totalTime );
   }
 
   static int ProductOfDigits( char[] digits )
@@ -41,4 +46,18 @@ public class LargestProductInSeries
     return product;
   }
 
+  static int SearchForZero( char[] digits )
+  {
+    int i = 0;
+    boolean found = false;
+
+    while( !found && i < digits.length )
+    {
+      found = ( digits[i] == '0' );
+      if( !found )
+        i++;
+    }
+
+    return i;
+  }
 }
