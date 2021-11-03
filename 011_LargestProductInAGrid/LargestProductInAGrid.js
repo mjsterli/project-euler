@@ -43,25 +43,124 @@ const pDown = (grid, x, y, maxNumbers) => {
   return product;
 };
 
+const pLeft = (grid, x, y, maxNumbers) => {
+  if(y < maxNumbers - 1)
+    return 0;
+
+  let product = 1;
+  for(let i = y; i > y - maxNumbers; i--)
+    product *= grid[x][i];
+
+  return product;
+};
+
+const pRight = (grid, x, y, maxNumbers) => {
+  if(y > grid[x].length - maxNumbers - 1)
+    return 0;
+
+  let product = 1;
+  for(let i = y; i < y + maxNumbers; i++)
+    product *= grid[x][i];
+
+  return product;
+};
+
+const pDiagLeftUp = (grid, x, y, maxNumbers) => {
+  if(x < maxNumbers - 1 || y < maxNumbers - 1)
+  return 0;
+  
+  let product = 1;
+  for(let i = 0; i < maxNumbers; i++){
+    product *= grid[x-i][y-i];
+  }
+  
+  return product;
+};
+
+const pDiagLeftDown = (grid, x, y, maxNumbers) => {
+  if(x > grid.length - maxNumbers - 1 || y < maxNumbers - 1)
+    return 0;
+
+  let product = 1;
+  for(let i = 0; i < maxNumbers; i++){
+    product *= grid[x+i][y-i];
+  }
+
+  return product;
+};
+
+const pDiagRightUp = (grid, x, y, maxNumbers) => {
+  if(x < maxNumbers - 1 || y > grid[x].length - maxNumbers - 1)
+  return 0;
+  
+  let product = 1;
+  for(let i = 0; i < maxNumbers; i++){
+    product *= grid[x-i][y+i];
+  }
+  
+  return product;
+};
+
+const pDiagRightDown = (grid, x, y, maxNumbers) => {
+  if(x > grid.length - maxNumbers - 1 || y > grid[x].length - maxNumbers - 1)
+    return 0;
+
+  let product = 1;
+  for(let i = 0; i < maxNumbers; i++){
+    product *= grid[x+i][y+i];
+  }
+
+  return product;
+};
+
 const pVertical = (grid, x, y, maxNumbers) => {
   let up = pUp(grid, x, y, maxNumbers), down = pDown(grid, x, y, maxNumbers);
 
   return (up > down) ? up : down;
 };
 
-const pDialLeftUp = (grid, x, y, maxNumbers) => {
-  if(x < maxNumbers - 1 || y < maxNumbers - 1)
-    return 0;
-};
+const pHorizontal = (grid, x, y, maxNumbers) => {
+  let left = pLeft(grid, x, y, maxNumbers), right = pRight(grid, x, y, maxNumbers);
 
-const pDiagLeft = (grid, x, y, maxNumbers) => {
-  if(x < maxNumbers - 1 || x > grid.length - maxNumbers - 1 || y < maxNumbers - 1 || y > grid[x].length - maxNumbers - 1)
-    return 0;
-
-  for(let i = )
+  return left > right ? left : right;
 }
 
+const pStraight = (grid, x, y, maxNumbers) => {
+  let vertical = pVertical(grid, x, y, maxNumbers), horizontal = pHorizontal(grid, x, y, maxNumbers);
+
+  return vertical > horizontal ? vertical : horizontal;
+}
+
+const pDiagLeft = (grid, x, y, maxNumbers) => {
+  let up = pDiagLeftUp(grid, x, y, maxNumbers), down = pDiagLeftDown(grid, x, y, maxNumbers);
+
+  return (up > down) ? up : down;
+};
+
+const pDiagRight = (grid, x, y, maxNumbers) => {
+  let up = pDiagRightUp(grid, x, y, maxNumbers), down = pDiagRightDown(grid, x, y, maxNumbers);
+
+  return up > down ? up : down;
+}
+
+const pDiag = (grid, x, y, maxNumbers) => {
+  let left = pDiagLeft(grid, x, y, maxNumbers), right = pDiagRight(grid, x, y, maxNumbers);
+
+  return left > right ? left : right;
+}
+
+const GreatestProduct = (grid, x, y, maxNumbers) => {
+  let straight = pStraight(grid, x, y, maxNumbers), diag = pDiag(grid, x, y, maxNumbers);
+
+  return straight > diag ? straight : diag; 
+}
+
+let greatestProduct = 0, product;
 for(let i = 0; i < grid.length; i++)
   for(let j = 0; j < grid[i].length; j++){
-    console.log(pUp(grid, i, j, 4));
+    product = GreatestProduct(grid, i, j, 4);
+
+    if(product > greatestProduct) greatestProduct = product;
   }
+
+  console.log(`The Greatest Product in the grid is : ${greatestProduct}`);
